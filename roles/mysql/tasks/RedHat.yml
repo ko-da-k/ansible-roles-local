@@ -1,0 +1,26 @@
+---
+- name: Add required packages
+  yum:
+    name: "{{ item }}"
+    state: present
+    validate_certs: yes
+  with_items:
+    - http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
+
+- name: Install required packages
+  yum:
+    name: "{{ item }}"
+    state: present
+    enablerepo: mysql56-community
+    disablerepo: mysql57-community
+  with_items:
+    - yum-utils
+    - mysql-community-server
+    - MySQL-python
+
+- name: Start mysql server
+  systemd:
+    name: mysqld
+    state: started
+    enabled: yes
+ 

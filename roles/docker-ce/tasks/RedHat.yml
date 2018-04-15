@@ -1,0 +1,27 @@
+---
+- name: Install required packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - yum-utils
+    - device-mapper-persistent-data 
+    - lvm2
+
+- name: Set up the stable repository
+  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: Yum makecache fast
+  yum:
+    name: "*"
+    state: latest
+
+- name: Install docker-ce
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - docker-ce
+  notify:
+    - Restart docker 
+

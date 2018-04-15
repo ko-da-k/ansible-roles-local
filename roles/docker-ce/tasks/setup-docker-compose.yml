@@ -1,0 +1,14 @@
+---
+- name: Verify docker-compose
+  stat:
+    path: /usr/local/bin/docker-compose
+  register: dc
+
+- name: Install docker-compose
+  shell: curl -L https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+  when: not dc.stat.exists
+
+- name: Chmod docker-compose
+  file:
+    dest: /usr/local/bin/docker-compose
+    mode: a+x

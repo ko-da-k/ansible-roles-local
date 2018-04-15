@@ -1,0 +1,7 @@
+---
+- name: Install postgres
+  block: 
+    - include: "{{ ansible_os_family }}.yml"
+  become: true
+
+

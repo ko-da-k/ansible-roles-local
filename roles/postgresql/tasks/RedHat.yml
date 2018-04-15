@@ -1,0 +1,17 @@
+---
+- name: Install required packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - postgresql-server
+    - python-psycopg2
+
+- name: Postgres initdb
+  shell: service postgresql initdb
+  
+- name: Start postgres server
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes 

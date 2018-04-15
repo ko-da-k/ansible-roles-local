@@ -1,0 +1,42 @@
+---
+- name: Install package
+  block: 
+    - include: "{{ ansible_os_family }}.yml"
+  become: true
+
+- name: Clone pyenv.git
+  git:
+    repo: https://github.com/yyuu/pyenv.git
+    dest: ~/.pyenv
+
+- name: Check bash_profile
+  stat:
+    path: ~/.bash_profile
+  register: bp_stat
+
+- name: Add info to bash_profile
+  block:
+    - name: touch bash_profile 
+      file:
+        path: ~/.bash_profile
+        state: touch
+      
+    - name: add bash_profile setting
+      blockinfile:
+        dest: ~/.bash_profile
+        state: present
+        content: |
+          if [ -d ~/.pyenv ]; then 
+            export PYENV_ROOT="$HOME/.pyenv"
+            export PATH="$PYENV_ROOT/bin:$PATH"
+            eval "$(pyenv init -)"
+          fi 
+  when: bp_stat.stat.exists == false
+
+- name: Load bash_profile
+  shell: bash -lc "source ~/.bash_profile && pyenv versions"
+  register: pyenv_versions 
+
+- name: Display pyenv version
+  debug:
+    var: pyenv_versions

@@ -1,0 +1,42 @@
+---
+- name: Install apt packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common 
+
+- name: Verify GPG key
+  shell: apt-key fingerprint 0EBFCD88 | grep "9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88"
+  register: docker_gpg
+  ignore_errors: True
+  changed_when: False
+
+- name: Add Docker's official GPG key
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  when: docker_gpg | failed
+
+- name: Define lsb_release -cs
+  shell: lsb_release -cs 
+  register: lsb_release
+
+- name: Display lsb_release
+  debug:
+    var: lsb_release
+
+- name: Setup the stable repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ lsb_release.stdout }} stable"
+    state: present 
+
+- name: Install docker-ce
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - docker-ce

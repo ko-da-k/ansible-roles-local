@@ -1,0 +1,13 @@
+---
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - mysql-server
+    - mysql-client
+    - libmysqld-dev
+    - libmysqlclient-dev
+    - python-mysqldb 
+

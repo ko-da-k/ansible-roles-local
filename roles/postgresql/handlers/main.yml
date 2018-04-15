@@ -1,0 +1,30 @@
+---
+- name: Restart postgres for Debian
+  shell: /etc/init.d/postgresql restart
+
+- name: Restart postgres for RedHat
+  systemd:
+    name: postgresql
+    state: restarted
+    daemon_reload: yes 
+
+- name: Create database
+  postgresql_db:
+    name: "{{ item }}"
+    encoding: "UTF-8"
+    login_user: postgres
+  with_items:
+    - testdb
+  become_user: postgres
+  become: true
+
+- name: Create user
+  postgresql_user:
+    db: "{{ item.db }}"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    priv: ALL
+    state: present
+    login_user: postgres
+  with_items:
+    - { db: "testdb", name: "test_user", password: "password" }

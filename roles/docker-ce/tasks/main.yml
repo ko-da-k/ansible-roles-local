@@ -1,0 +1,16 @@
+---
+- name: Install docker and docker-compose
+  block: 
+    - include: "{{ ansible_os_family }}.yml"
+    - include: setup-docker-compose.yml
+  become: true
+
+- name: Adding user to group docker
+  user:
+    name: '{{ ansible_ssh_user }}'
+    groups: docker
+    append: yes
+  notify:
+    - Restart docker 
+  become: true
+

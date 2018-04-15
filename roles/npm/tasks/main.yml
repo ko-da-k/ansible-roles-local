@@ -1,0 +1,5 @@
+---
+- name: Install nodejs and npm using 'n'
+  block: 
+    - include: "{{ ansible_os_family }}.yml" 
+  become: true

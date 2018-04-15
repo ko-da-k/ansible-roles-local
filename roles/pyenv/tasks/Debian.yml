@@ -1,0 +1,21 @@
+---
+- name: Install apt package
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - git
+    - gcc
+    - make
+    - openssl
+    - libssl-dev
+    - libbz2-dev 
+    - libreadline-dev 
+    - libsqlite3-dev
+    - python3-tk 
+    - tk-dev 
+    - python-tk 
+    - libfreetype6-dev
+
+

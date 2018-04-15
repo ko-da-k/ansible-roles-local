@@ -1,0 +1,50 @@
+---
+- name: Check n exists
+  shell: which n
+  register: n_exists
+  ignore_errors: true
+
+- name: Install 'n'
+  block:
+    - name: Install apt package
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - build-essential
+        - nodejs
+        - npm
+
+    - name: Change npm config
+      shell: "{{ item }}"
+      with_items:
+        - npm config set strict-ssl false
+        - npm config set registry="http://registry.npmjs.org/"
+
+    - name: npm cache clean
+      shell: npm cache clean -f
+
+    - name: Install 'n'
+      npm:
+        name: n
+        global: yes
+        state: present
+  when: '"/usr/local/bin/n" not in n_exists.stdout'
+
+- name: Install latest node
+  block:
+    - name: Check n latest version
+      shell: n --stable
+      register: n_version 
+
+    - name: Debug versions
+      debug:
+        var: "{{ item }}"
+      with_items:
+        - n_version 
+  
+    - name: Install n stable
+      shell: n stable
+
+  

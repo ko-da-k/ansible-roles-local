@@ -1,0 +1,11 @@
+---
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - postgresql
+    - python-psycopg2 
+
+- name: Postgres initdb
+  shell: /etc/init.d/postgresql start 

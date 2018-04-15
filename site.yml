@@ -1,0 +1,19 @@
+---
+- name: Set up roles
+  hosts: testserver
+  roles:
+    - name: docker-ce
+      tags:
+        - docker-ce 
+    - name: pyenv
+      tags:
+        - pyenv 
+    - name: postgresql
+      tags:
+        - postgresql 
+    - name: mysql
+      tags:
+        - mysql 
+    - name: npm
+      tags:
+        - npm
