@@ -1,0 +1,4 @@
+---
+golang_version: 1.10.1
+os_version: linux
+arch_version: amd64

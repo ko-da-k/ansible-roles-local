@@ -1,0 +1,13 @@
+---
+- name: Install golang
+  block:
+    - include: "{{ ansible_os_family }}.yml"
+  become: yes
+
+- name: Check go version
+  shell: /usr/local/go/bin/go version
+  register: go_version 
+
+- name: Display go version
+  debug:
+    var: go_version 

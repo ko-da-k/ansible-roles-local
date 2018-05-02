@@ -1,0 +1,11 @@
+---
+- name: Download golang tools
+  get_url:
+    url: https://dl.google.com/go/go{{ golang_version }}.{{ os_version }}-{{ arch_version }}.tar.gz
+    dest: ~/go{{ golang_version }}.{{ os_version }}-{{ arch_version }}.tar.gz 
+
+- name: Unarchive golang tools
+  unarchive:
+    src: ~/go{{ golang_version }}.{{ os_version }}-{{ arch_version }}.tar.gz
+    dest: /usr/local
+    remote_src: yes
