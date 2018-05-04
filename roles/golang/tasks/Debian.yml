@@ -7,5 +7,17 @@
 - name: Unarchive golang tools
   unarchive:
     src: ~/go{{ golang_version }}.{{ os_version }}-{{ arch_version }}.tar.gz
-    dest: /usr/local
+    dest: ~/
     remote_src: yes
+
+- name: Rename filename from ~/go -> ~/.go
+  block:
+    - name: Check go dir
+      stat:
+        path: ~/go
+      register: go_path
+
+    - name: rename go path
+      command: mv ~/go ~/.go
+      when: go_path.stat.exists
+    
